@@ -1,14 +1,17 @@
 {% extends "polls/base.html" %}
+{% block title %}Pagina Inicial{% endblock title %}
 
-{% block title %}Página Inicial{% endblock title %}
+{% block content %}
+    {% if latest_question_list %}
+        <ul>
+            {% for question in latest_question_list %}
+                <li><a href="/enquetes/{{ question.id}}/">
+                {{ question.question_text }}
+                </a>></li>
 
-
-{% if latest_question_list %} 
-    <ul>
-        {% for question in latest_queston_list %}
-            <li><a href="/enquetes/{{ question.id }}/">{{ question.question_text }}</a></li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <P>Nenhuma enquete cadastrada.</p>
-{% endif %}
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No polls are avalable.</p>>
+    {% endif %}
+{% endblock content %}
