@@ -1,0 +1,10 @@
+{% extends 'polls/base.html'%}
+{% block content %}
+   <h2> Cadastrar Enquetes </h2>
+   
+   <form method="post">
+       {% csrf_token %}
+       {{ form.as_p }}
+       <input type="submit">
+   </form>
+{% endblock content %}
