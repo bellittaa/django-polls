@@ -1,3 +1,4 @@
+from email import message
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 from .models import Question
@@ -20,7 +21,7 @@ def results(request, question_id):
 def vote(request, question_id):
     return HttpResponse("Você está votando em uma enquete %s." % question_id)
 
-from django.views.generic import CreateView, ListView, DetailView, DeleteView
+from django.views.generic import CreateView, ListView, DetailView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 
 class QuestionCreateView(CreateView):
@@ -40,6 +41,11 @@ class QuestionDetailView(DetailView):
 class QuestionDeleteView(DeleteView):
     model =  Question 
     success_url = reverse_lazy("question_list")
+    success_message = "Enquete excluída com sucesso."
+
+    def form_valid(self, form):
+        message.success(self.request, self.success_message)
+        return super(). form_valid(form) 
 
 class QuestionListView(ListView):
     model = Question
@@ -47,6 +53,10 @@ class QuestionListView(ListView):
     ordering = ['-pub_date']
     paginate_by = 5
 
+class QuestionUpdateView(UpdateView):
+    model = Question
+    success_url = reverse_lazy('question-list')
+    fiels = ('question_text',)
 
     
    
