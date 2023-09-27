@@ -5,14 +5,10 @@ User = get_user_model()
 
 class AccountSignupForm(forms.ModelForm):
 
-    password = forms.CharField(
-                    label="Senha", 
-                    max_length=50,
-                    widget=forms.PasswordInput())
+    password = forms.CharField(label="Senha", max_length=50, widget=forms.widgets.PasswordInput())
 
 
-class Meta:
+    class Meta:
 
-    model = User # conecta o form com o model padrão de usuário
-
-    fields = ('username', 'email', 'password', )
+        model = User # conecta o form com o model padrão de usuário
+        fields = ('username', 'email', 'password', )

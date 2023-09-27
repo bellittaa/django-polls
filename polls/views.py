@@ -1,6 +1,8 @@
 from email import message
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Question
 
 def index(request):
@@ -52,6 +54,12 @@ class QuestionListView(ListView):
     context_object_name = 'questions'
     ordering = ['-pub_date']
     paginate_by = 5
+
+@login_required
+def sobre(request):
+    return HttpResponse('Este é um app de enquete!')
+
+
 
 class QuestionUpdateView(UpdateView):
     model = Question
