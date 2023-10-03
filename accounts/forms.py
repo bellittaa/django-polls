@@ -12,3 +12,9 @@ class AccountSignupForm(forms.ModelForm):
 
         model = User # conecta o form com o model padrão de usuário
         fields = ('username', 'email', 'password', )
+        widgets = { # data personalizada a nível de formulário para exibição
+'data_nascimento': forms.widgets.DateInput(
+attrs={'type': 'date', 'required': 'required'}
+),
+}
+
