@@ -26,6 +26,9 @@
                     
                     <ul>
                         {% if user.is_authenticated if user %}
+
+                        <a class="p-2 text-dark" href="{% url 'account_edit' pk=user.pk %}">Minha conta</a>
+<a                         class="p-2 text-dark" href="{% url 'logout' %}">Sair</a>
                             <li> {{ user.username }} <a href="{% url  'logout' %}"> Sair</a></li>
                         {% else %}
                             <li> <a href="{% url 'signup' %}"> Cadastrar</a> </li>
