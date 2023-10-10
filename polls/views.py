@@ -1,9 +1,11 @@
 from email import message
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Question
+from django.forms.models import BaseModelForm 
+
 
 def index(request):
     latest_question_list = Question.objects.order_by("-pub_date")[:5]
@@ -65,6 +67,23 @@ class QuestionUpdateView(UpdateView):
     model = Question
     success_url = reverse_lazy('question-list')
     fiels = ('question_text',)
+    success_url = reverse_lazy('plls_all')
+    success_message = 'Pergunta atualizada com sucesso!'
 
+    def get_context_data(self, **kwargs):
+        conext = super(QuestionUpdateView, self). def get_context_data(self, **kwargs)
+        context['form_title'] = 'Editando a pergunta'
+
+        question_id = self.kwargs.get('pk')
+        choices = choice.objects.filter(question__pk=question_id)
+        context['question_choices'] = choices
+
+        return context
+
+
+    def form_valid(self, request, *args, **kwargs):
+        messages.success(self, request, self.success_message)
+        return super(QuestionUpdateView,self).def form_valid(request, *args, **kwargs)
+         
     
    
