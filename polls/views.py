@@ -102,6 +102,14 @@ class QuestionDetailView(DetailView):
     template_name = 'polls/question_detail.html'
     context_object_name = 'question'
 
+    def get_context_data(self, **kwargs):
+        context = super(QuestionDetailView, self).get_context_data(**kwargs)
+        question_id = self.kwargs.get('pk')
+        choices = Choice.objects.filter(question__pk=question_id)
+        context['question_choices'] = choices
+
+        return context
+
 class QuestionListView(ListView):
     model = Question
     template_name = 'polls/question_list.html'
