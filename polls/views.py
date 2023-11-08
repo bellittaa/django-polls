@@ -29,11 +29,23 @@ def vote(request, question_id):
 from django.views.generic import CreateView, ListView, DetailView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 
-class QuestionCreateView(CreateView):
+class QuestionCreateView(LoginRequiredMixin, CreateView):
     model = Question
     fields = ('question_text',)
     success_url = reverse_lazy('index')
     template_name = 'polls/question_form.html'
+    success_message = 'Pergunta criada com sucesso!'
+
+    def get_context_data(self, **kwargs):
+        context = super(QuestionCreateView, self).get_context_data  (**kwargs)
+        context['form_title'] = 'Criando uma pergunta'
+
+        return context
+
+    def form_valid(self,form):
+        form.instance.author = self.request.user
+        messages.succes(self.request, self.success_message)
+        return super(QuestionCreateView, self). form_valid(form)
 
 class QuestionListView(ListView):
    model = Question 
