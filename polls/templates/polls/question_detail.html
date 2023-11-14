@@ -2,6 +2,12 @@
 
 {% block content %}
 
+{% if question.author %}
+<strong>Autor:</strong> {{ question.author.username }}
+{% else %}
+<strong>Autor:</strong> Desconhecido
+{% endif %} <br>
+
     <h1>Detalhes da enquete </h1>
     <p> {{ question.question_text }} </p>
     <p>Data da publicação: {{ question.pub_date }} </p>
