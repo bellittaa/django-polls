@@ -1,11 +1,12 @@
 from email import message
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Choice, Question
 from django.forms.models import BaseModelForm 
 from django.contrib import messages
+from django.db.models import Sum 
 
 
 def index(request):
@@ -53,7 +54,14 @@ class QuestionListView(ListView):
 
 class QuestionDetailView(DetailView):
     model = Question 
-    context_object_name = 'question'    
+    context_object_name = 'question'
+
+    def get_context_data(self, **kwargs):
+        context = super(QuestionDetailView, self).get_context_data(**kwargs)
+        votes = Choice.objects.filter(question=context ['question']).aggregate(total=Sum('votes')) or 0
+        context['total_votes'] = votes.get('total')
+
+        return context
 
 class QuestionDeleteView(DeleteView):
     model =  Question 
@@ -190,3 +198,18 @@ class ChoiceDeleteView(LoginRequiredMixin, DeleteView):
         question_id = self.object.question.id
         print(question_id)
         return reverse_lazy('poll_edit', kwargs={'pk': question_id})
+
+def vote(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    if request.method == 'POST':
+        try:
+            selected_choice = question.choice_set.get(pk=request.POST["choice"])
+        except (KeyError, Choice.DoesNotExist):
+            messages.error(request, 'Serlecione uma alternativa para votar!')
+        else:
+            selected_choice.votes += 1
+            selected_choice.save()
+            messages.success(request, 'Seu voto foi registrado com sucesso!')
+            return redirect(reverse_lazy("poll_show", args))
+
+        
