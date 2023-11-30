@@ -12,12 +12,35 @@
     <p> {{ question.question_text }} </p>
     <p>Data da publicação: {{ question.pub_date }} </p>
 
+
     <ul>
         <li><a href="{% url 'question-list' %}"> "Listar enquetes"</a></li>
         <li><a href="{% url 'question-delete' question.pk %}"> Deletar enquete</a></li>
 
         <li> <a href="{% url 'question-update' question.pk %}">Atulizar Enquete</a></li>
     </ul>
+
+    {% if total_votes %}
+            <p>Total de votos: {{ total_votes }}</p>
+    {% endif %}
+    
+        <form action="{% url 'poll_vote' question_id=question.id %}" method="post">
+            {% csrf_token %}
+            <fieldset>
+                <legend>
+                    <h1>{{ question.question_text }}</h1>
+                    {% for choice in question.choice_set.all %}
+                        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+                        <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+                    {% empty %}
+                    <h5>Não há alternativas cadastradas</h5>
+                    {% endfor %}
+                </legend>
+            </fieldset>
+            {% if question.choice_set.all %}
+                <input type="submit" value="Votar">
+            {% endif %}
+        </form>
 
 
 {% endblock content %}

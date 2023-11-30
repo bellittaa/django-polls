@@ -18,5 +18,8 @@ urlpatterns = [
     path('pergunta/<int:pk>/alternativa/add', views.ChoiceCreateView.as_view(), name="choice add"),
     path('alternativa/cint:pka/edit', views.ChoiceUpdateView.as_view(), name="choice_edit"),
     path('alternativa/<int:pk>/delete', views.ChoiceDeleteView.as_view(), name="choice delete"),
+    path('pergunta/<int:question_id>vote', views.vote, name="poll_vote"),
+    path('pergunta/<int:question_id>/results', views.results, name= "poll_results")
+
 
 ]
