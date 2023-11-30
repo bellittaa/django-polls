@@ -6,7 +6,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Choice, Question
 from django.forms.models import BaseModelForm 
 from django.contrib import messages
-from django.db.models import Sum 
+from django.db.models import Sum
+from django.core.exception import VlidationError
+from django.contrid.auth import get_user_model
+user = get_user_model() 
 
 
 def index(request):
@@ -79,8 +82,28 @@ class QuestionListView(ListView):
     paginate_by = 5
 
 @login_required
-def sobre(request):
-    return HttpResponse('Este é um app de enquete!')
+def sobre(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    if request.method == 'POST':
+        try:
+            selected_choice = question.choice_set.get(pk=request.POST["choice"])
+            selected_choice.votes += 1
+            session_user = get_object_or_404(User, id=request.user.id)
+            selected_choice.save(user=session_user)
+    
+        except (KeyError, Choice.DoesNotExist):
+            messages.error(request, 'Selecione uma alternativa para votar')
+        
+        except (ValidationError) as error:
+            messages.error(request, error.message)
+
+        else:
+            messages.success(request, 'Seu voto foi registrado com sucesso')
+            return redirect(reverse_lazy("poll_results", args=(question.id,)))
+
+    context = {'question': question}
+    return render(request, 'polls/question_detail.html', context)
+
 
 
 
