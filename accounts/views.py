@@ -21,11 +21,11 @@ class AccountCreateView(CreateView):
     success_message = 'Usuário criado com sucesso!'
 
 
-def form_valid(self, form): # executa quando os dados estiverem válidos
-    form.instance.password = make_password(form.instance.password)
-    form.save()
-    messages.success(self.request, self.success_message)
-    return super(AccountCreateView, self).form_valid(form)
+    def form_valid(self, form): # executa quando os dados estiverem válidos
+        form.instance.password = make_password(form.instance.password)
+        form.save()
+        messages.success(self.request, self.success_message)
+        return super(AccountCreateView, self).form_valid(form)
 
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin

@@ -1,9 +1,10 @@
 from time import timezone
 from django.db import models
 from django.contrib.auth import get_user_model
-user = get_user_model()import datetime 
+user = get_user_model()
+import datetime 
 from django.utils import timezone
-from django.core.eceptions import ValidationError
+from django.core.exceptions import ValidationError
 
 
 
@@ -31,7 +32,7 @@ class Choice(models.Model):
 
     def save(self, user, *args, **kwargs):
         question_user = QuestionUser.objects.filter(user=user, question=self.question).count()
-        if qustion_user > 0:
+        if question_user > 0:
             raise ValidationError('Não é permitido votar mais de uma vez')
 
         question_user = QuestionUser.objects.create(user=user, question=self.question)

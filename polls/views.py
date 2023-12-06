@@ -7,8 +7,8 @@ from .models import Choice, Question
 from django.forms.models import BaseModelForm 
 from django.contrib import messages
 from django.db.models import Sum
-from django.core.exception import VlidationError
-from django.contrid.auth import get_user_model
+from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
 user = get_user_model() 
 
 
@@ -88,7 +88,7 @@ def sobre(request, question_id):
         try:
             selected_choice = question.choice_set.get(pk=request.POST["choice"])
             selected_choice.votes += 1
-            session_user = get_object_or_404(User, id=request.user.id)
+            session_user = get_object_or_404(user, id=request.user.id)
             selected_choice.save(user=session_user)
     
         except (KeyError, Choice.DoesNotExist):
@@ -233,7 +233,7 @@ def vote(request, question_id):
             selected_choice.votes += 1
             selected_choice.save()
             messages.success(request, 'Seu voto foi registrado com sucesso!')
-            return redirect(reverse_lazy("poll_results", arg=(quetion.id)))
+            return redirect(reverse_lazy("poll_results", arg=(question.id)))
 
         context = {'question': question}
         return render(request, 'polls/question_detail.html', context)
