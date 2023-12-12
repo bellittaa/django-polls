@@ -36,7 +36,7 @@ from django.urls import reverse_lazy
 class QuestionCreateView(LoginRequiredMixin, CreateView):
     model = Question
     fields = ('question_text',)
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('question-list')
     template_name = 'polls/question_form.html'
     success_message = 'Pergunta criada com sucesso!'
 
@@ -48,7 +48,7 @@ class QuestionCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self,form):
         form.instance.author = self.request.user
-        messages.succes(self.request, self.success_message)
+        messages.success(self.request, self.success_message)
         return super(QuestionCreateView, self). form_valid(form)
 
 class QuestionListView(ListView):

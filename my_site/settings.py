@@ -128,7 +128,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'polls/listar'
+LOGIN_REDIRECT_URL = '/polls/listar'
 LOGOUT_REDIRECT_URL = '/polls/listar'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
